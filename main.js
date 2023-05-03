@@ -16,60 +16,59 @@ const showError = (errorMessage) => {
 }
 
 const getWeather = async (city) => {
-const url = `https://api.weathereapi.com/v1/current.json?key=${apiKey}&q=${city}`;
-const response = await fetch(url);
-const data = await response.json();
-return data;
+  const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+  console.log(url)
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
 }
 
 
 const showCard = ({ name, country, temp, condition }) => {
     const html =`  
-    <div class="card">
-        <h2 class="card-city">${name}<span>${country}</span>
-        </h2>
-        <div class="card-weather">
-          <div class="card-value">
-            ${temp}
-            <sup>°c</sup>
+      <div class="card">
+          <h2 class="card-city">${name}<span>${country}</span>
+          </h2>
+          <div class="card-weather">
+            <div class="card-value">
+              ${temp}
+              <sup>°c</sup>
+            </div>
+            <img class="card-img" src="img/icon/cloudy.png" alt="" />
           </div>
-          <img class="card-img" src="img/icon/cloudy.png" alt="" />
+          <div class="card-discription">${condition}</div>
         </div>
-        <div class="card-discription">${condition}</div>
-      </div>
-                `
+      `
+      mainContainer.innerHTML = html
 }
 
 
 form.addEventListener("submit", async (e) => {
-e.preventDefault();
+  e.preventDefault();
 
-let city = inputForm.Value;
+  let city = inputForm.value;
 
-const data = await getWeather(city)
+  const data = await getWeather(city)
 
-if(data.error) {
-clearCard();
-showError(data.error.message)
-} else {
-  clearCard();
-  console.log(data)
+  if(data.error) {
+    clearCard();
+    showError(data.error.message)
+  } else {
+    clearCard();
+    console.log(data)
 
-const weatherData = {
-  name: data.location.name,
-  country: data.location.country,
-  temp: data.current.temp_c,
-  condition: data.current.condition.text,
-}
-}
+    const weatherData = {
+      name: data.location.name,
+      country: data.location.country,
+      temp: data.current.temp_c,
+      condition: data.current.condition.text,
+    }
+    showCard(weatherData);
+  }
 
-showCard(weatherData);
+  inputForm.Value = "";
 
-
-
-inputForm.Value = "";
-
-}
+  }
 )
 
 
